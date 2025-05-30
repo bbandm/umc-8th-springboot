@@ -9,6 +9,14 @@ import umc.week7.web.dto.MissionResponseDTO;
 
 public class MissionConverter {
 
+    public static MissionResponseDTO.MissionResult toMissionResultDTO(Mission mission) {
+        return MissionResponseDTO.MissionResult.builder()
+                .missionId(mission.getId())
+                .missionSpec(mission.getMissionSpec())
+                .reward(mission.getReward())
+                .build();
+    }
+
     public static MemberMission toMemberMission(Member member, Mission mission) {
         return MemberMission.builder()
                 .member(member)

@@ -2,13 +2,14 @@ package umc.week7.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import umc.week7.domain.common.BaseEntity;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Review {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

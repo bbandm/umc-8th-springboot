@@ -1,6 +1,7 @@
-package umc.week7.service;
+package umc.week7.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.week7.domain.Member;
@@ -11,6 +12,9 @@ import umc.week7.repository.ReviewRepository.ReviewRepository;
 import umc.week7.repository.StoreRepository.StoreRepository;
 import umc.week7.web.dto.ReviewRequestDTO;
 import umc.week7.converter.ReviewConverter;
+import umc.week7.web.dto.ReviewResponseDTO;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +23,13 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final StoreRepository storeRepository;
     private final MemberRepository memberRepository;
+
+    public List<ReviewResponseDTO> getMyReviews(Long memberId, int page) {
+        PageRequest pageRequest = PageRequest.of(page,10);
+        return ReviewConverter.toReviewResponseDTOList(
+                reviewRepository.findByMemberId(memberId, pageRequest).getContent()
+        );
+    }
 
     @Transactional
     public void createReview(Long storeId, ReviewRequestDTO.CreateDto dto) {
