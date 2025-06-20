@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import umc.week7.domain.common.BaseEntity;
 import umc.week7.domain.enums.Gender;
 import umc.week7.domain.enums.MemberStatus;
+import umc.week7.domain.enums.Role;
 import umc.week7.domain.enums.SocialType;
 import umc.week7.domain.mapping.MemberAgree;
 import umc.week7.domain.mapping.MemberMission;
@@ -50,6 +51,13 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(15) DEFAULT 'ACTIVE'")
     private MemberStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public void encodePassword(String password) {
+        this.password = password;
+    }
 
     private LocalDate inactiveDate;
 

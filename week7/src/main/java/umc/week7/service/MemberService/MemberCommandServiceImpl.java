@@ -41,4 +41,37 @@ public class MemberCommandServiceImpl implements MemberCommandService{
 
         return memberRepository.save(newMember);
     }
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional
+    public Member joinMember(MemberRequestDTO.JoinDto request) {
+
+        Member newMember = MemberConverter.toMember(request);
+
+        newMember.encodePassword(passwordEncoder.encode(request.getPassword()));
+    }
+
+    @Override
+    public MemberResponseDTO.LoginResultDTO loginMember(MemberRequestDTO.LoginRequestDTO request) {
+        Member member = memberRepository.findByEmail(request.getEmail())
+                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if(!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+            throw new MemberHandler(ErrorStatus.INVALID_PASSWORD);
+        }
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                member.getEmail(), null,
+                Collections.singleton(() -> member.getRole().name())
+        );
+
+        String accessToken = jwtTokenProvider.generateToken(authentication);
+
+        return MemberConverter.toLoginResultDTO(
+                member.getId(),
+                accessToken
+        );
+    }
 }
